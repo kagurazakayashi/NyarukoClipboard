@@ -32,9 +32,10 @@ func init() {
 }
 
 func main() {
+	fmt.Println("NyarukoClipboard v1.0.0")
 	flag.Parse()
 	if len(confClient) > 0 {
-		fmt.Println("客户端模式: " + confServer)
+		fmt.Println("客户端模式: " + confClient)
 		protocolAndAddress(confClient)
 		client()
 	} else if len(confServer) > 0 {
