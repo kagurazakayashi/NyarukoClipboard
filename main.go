@@ -12,8 +12,8 @@ import (
 var (
 	confServer string
 	confClient string
-	noSend     bool
-	noReceive  bool
+	noSend     bool = false
+	noReceive  bool = false
 	refresh    int
 
 	clipboardNow string
@@ -23,12 +23,15 @@ var (
 	conn         net.Conn
 )
 
+const bufSize = 1048576
+
 func init() {
-	flag.StringVar(&confServer, "s", "tcp://:5888", "服务器模式，作为服务器连接的地址")
+	flag.StringVar(&confServer, "s", "tcp://:7976", "服务器模式，作为服务器连接的地址")
 	flag.StringVar(&confClient, "c", "", "客户端模式，作为客户端连接的地址")
 	flag.BoolVar(&noSend, "ns", false, "禁止发送")
 	flag.BoolVar(&noReceive, "nr", false, "禁止接收")
 	flag.IntVar(&refresh, "r", 1000, "剪贴板检查间隔（毫秒）")
+
 }
 
 func main() {

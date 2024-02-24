@@ -27,7 +27,9 @@ func clipboardCopy() bool {
 	}
 	fmt.Printf("#<- %s\n", clipboardContent)
 	clipboardNow = clipboardContent
-	serverSend(clipboardContent)
+	if !noSend {
+		serverSend(clipboardContent)
+	}
 	return true
 }
 
@@ -36,6 +38,9 @@ func clipboardPaste(text string) {
 		return
 	}
 	fmt.Printf("#-> %s\n", text)
+	if noReceive {
+		return
+	}
 	var err error = clipboard.WriteAll(text)
 	if err != nil {
 		fmt.Println("剪贴板写入失败")

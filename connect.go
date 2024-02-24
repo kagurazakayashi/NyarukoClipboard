@@ -11,7 +11,7 @@ func dataProcess() {
 	defer conn.Close()
 	for {
 		reader := bufio.NewReader(conn)
-		var buf [1024]byte
+		var buf [bufSize]byte
 		n, err := reader.Read(buf[:])
 		if err != nil {
 			if isServer {
@@ -41,10 +41,10 @@ func serverSend(text string) {
 }
 
 func truncateBytes(b []byte) []byte {
-	if len(b) <= 1024 {
+	if len(b) <= bufSize {
 		return b
 	}
-	return b[:1024]
+	return b[:bufSize]
 }
 
 func server() {
