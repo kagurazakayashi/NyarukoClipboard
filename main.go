@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -21,6 +22,7 @@ var (
 	protocol     string
 	address      string
 	conn         net.Conn
+	verbose      bool
 )
 
 const bufSize = 1048576
@@ -31,11 +33,11 @@ func init() {
 	flag.BoolVar(&noSend, "ns", false, "禁止发送")
 	flag.BoolVar(&noReceive, "nr", false, "禁止接收")
 	flag.IntVar(&refresh, "r", 1000, "剪贴板检查间隔（毫秒）")
-
+	flag.BoolVar(&verbose, "v", false, "显示调试信息")
 }
 
 func main() {
-	fmt.Println("NyarukoClipboard v1.0.0")
+	log.Println("NyarukoClipboard v1.0.0")
 	flag.Parse()
 	if len(confClient) > 0 {
 		fmt.Println("客户端模式: " + confClient)
@@ -50,14 +52,12 @@ func main() {
 		fmt.Println("请指定服务器模式还是客户端模式")
 		return
 	}
-	fmt.Println("剪贴板监控开始")
-	go clipboardMonitoring()
 
 	var signalch chan os.Signal = make(chan os.Signal, 1)
 	signal.Notify(signalch, os.Interrupt)
 	var signal os.Signal = <-signalch
 	conn.Close()
-	fmt.Println("程序退出。", signal)
+	log.Println("程序退出。", signal)
 }
 
 func protocolAndAddress(uri string) {

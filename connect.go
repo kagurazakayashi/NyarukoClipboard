@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"time"
 )
@@ -14,6 +15,7 @@ func dataProcess() {
 		var buf [bufSize]byte
 		n, err := reader.Read(buf[:])
 		if err != nil {
+			running = false
 			if isServer {
 				fmt.Printf("客户端断开连接: %v\n", err)
 			} else {
@@ -48,34 +50,38 @@ func truncateBytes(b []byte) []byte {
 }
 
 func server() {
-	fmt.Println("正在等待连接")
+	log.Println("正在等待连接")
 	listen, err := net.Listen(protocol, address)
 	if err != nil {
-		fmt.Printf("打开端口失败: %v\n", err)
+		log.Printf("打开端口失败: %v\n", err)
 		return
 	}
 	for {
 		conn, err = listen.Accept()
 		if err != nil {
-			fmt.Printf("客户端断开连接: %v\n", err)
+			log.Printf("客户端断开连接: %v\n", err)
 			continue
 		}
-		fmt.Println("客户端接入成功: " + conn.RemoteAddr().String())
+		log.Println("客户端接入成功: " + conn.RemoteAddr().String())
+		running = true
+		go clipboardMonitoring()
 		go dataProcess()
 	}
 }
 
 func client() {
-	fmt.Println("正在连接服务端")
+	log.Println("正在连接服务端")
 	listen, err := net.Dial(protocol, address)
 	if err != nil {
-		fmt.Printf("未能连接到服务端: %v\n", err)
+		log.Printf("未能连接到服务端: %v\n", err)
 		time.Sleep(3 * time.Second)
-		fmt.Println("重试连接到服务端")
+		log.Println("重试连接到服务端")
 		client()
 		return
 	}
 	conn = listen
-	fmt.Println("连接到服务端成功: " + conn.RemoteAddr().String())
+	log.Println("连接到服务端成功: " + conn.RemoteAddr().String())
+	running = true
+	go clipboardMonitoring()
 	go dataProcess()
 }
