@@ -17,7 +17,7 @@ var (
 	noReceive  bool = false
 	refresh    int
 
-	clipboardNow string
+	clipboardNow []byte
 	isServer     bool = false
 	protocol     string
 	address      string

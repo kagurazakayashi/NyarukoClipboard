@@ -31,15 +31,16 @@ func dataProcess() {
 	}
 }
 
-func serverSend(text string) {
+func serverSend(bytes []byte) {
 	if conn == nil {
 		return
 	}
-	_, err := conn.Write(truncateBytes([]byte(text)))
+	i, err := conn.Write(truncateBytes(bytes))
 	if err != nil {
-		fmt.Printf("发送失败: %v\n", err)
+		log.Println("发送失败: ", err)
 		return
 	}
+	log.Println("发送成功: ", i)
 }
 
 func truncateBytes(b []byte) []byte {
