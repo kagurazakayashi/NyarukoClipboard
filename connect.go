@@ -26,8 +26,7 @@ func dataProcess() {
 			}
 			break
 		}
-		recv := string(buf[:n])
-		clipboardPaste(recv)
+		clipboardPaste(buf[:n])
 	}
 }
 
@@ -40,7 +39,9 @@ func serverSend(bytes []byte) {
 		log.Println("发送失败: ", err)
 		return
 	}
-	log.Println("发送成功: ", i)
+	if verbose {
+		log.Println("发送成功: ", i)
+	}
 }
 
 func truncateBytes(b []byte) []byte {

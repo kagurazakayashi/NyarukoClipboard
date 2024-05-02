@@ -62,6 +62,11 @@ func main() {
 
 func protocolAndAddress(uri string) {
 	var uriArr []string = strings.Split(uri, "://")
-	protocol = uriArr[0]
-	address = uriArr[1]
+	if len(uriArr) < 2 {
+		protocol = "tcp"
+		address = uriArr[0]
+	} else {
+		protocol = uriArr[0]
+		address = uriArr[1]
+	}
 }
