@@ -13,6 +13,8 @@ import (
 var (
 	confServer string
 	confClient string
+	certFile   string
+	keyFile    string
 	noSend     bool = false
 	noReceive  bool = false
 	refresh    int
@@ -30,6 +32,9 @@ const bufSize = 1048576
 func init() {
 	flag.StringVar(&confServer, "s", "tcp://:7976", "服务器模式，作为服务器连接的地址")
 	flag.StringVar(&confClient, "c", "", "客户端模式，作为客户端连接的地址")
+	flag.StringVar(&certFile, "e", "", "证书文件")
+	flag.StringVar(&keyFile, "k", "", "密钥文件")
+
 	flag.BoolVar(&noSend, "ns", false, "禁止发送")
 	flag.BoolVar(&noReceive, "nr", false, "禁止接收")
 	flag.IntVar(&refresh, "r", 1000, "剪贴板检查间隔（毫秒）")

@@ -7,4 +7,4 @@ require (
 	golang.org/x/sys v0.18.0
 )
 
-require github.com/skanehira/clipboard-image/v2 v2.0.0 // indirect
+require github.com/skanehira/clipboard-image/v2 v2.0.0

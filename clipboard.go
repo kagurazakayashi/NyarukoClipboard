@@ -120,6 +120,7 @@ func clipboardPaste(data []byte) {
 		var reader *bytes.Reader = bytes.NewReader(data)
 		err = clipboardImage.Write(reader)
 	}
+	clipboardNow = data
 	if err != nil {
 		log.Println("剪贴板写入失败:", err)
 		return
