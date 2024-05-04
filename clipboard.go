@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"strconv"
 	"time"
+	"unicode/utf8"
 
 	clipboardText "github.com/atotto/clipboard"
 	clipboardImage "github.com/skanehira/clipboard-image/v2"
@@ -50,6 +52,7 @@ func viewData(bytes []byte) string {
 	if len(data) == 0 {
 		return "无数据"
 	}
+	// log.Println("===数据格式：", string(format), "数据长度：", len(data))
 	switch format {
 	case Text:
 		return "文本: " + string(data)
@@ -66,6 +69,10 @@ func clipboardCopy() bool {
 	// 	log.Printf("剪贴板内容: %s\n", clipboardContent)
 	// 	log.Printf("上次的内容: %s\n", clipboardNow)
 	// }
+	if !utf8.Valid(clipboardContent) {
+		err = fmt.Errorf("NO UTF-8")
+		clipboardContent = []byte{}
+	}
 	if err != nil {
 		// if verbose {
 		// 	log.Println("使用文本格式读取剪贴板失败", err)
@@ -80,7 +87,7 @@ func clipboardCopy() bool {
 		}
 		byteData, err := io.ReadAll(reader)
 		if err != nil || len(byteData) == 0 {
-			if verbose {
+			if verbose && err != nil {
 				log.Println("读取剪贴板失败", err)
 			}
 			return false
@@ -91,23 +98,25 @@ func clipboardCopy() bool {
 	} else if len(clipboardTextContent) > 0 {
 		clipboardContent = append([]byte{byte('T')}, clipboardContent...)
 	}
+	// log.Println("===发送前比较：", string(clipboardNow), "?=", string(clipboardContent))
 	if bytes.Equal(clipboardNow, clipboardContent) {
-		// log.Println("与上次内容相同。")
 		return false
 	}
-	log.Printf("#<- %s\n", viewData(clipboardContent))
+	log.Printf("[发送] %s\n", viewData(clipboardContent))
 	clipboardNow = clipboardContent
 	if !noSend {
-		serverSend(clipboardContent)
+		serverSend(append(clipboardContent, byte(0), byte(0)))
 	}
 	return true
 }
 
 func clipboardPaste(data []byte) {
-	if len(data) == 0 || bytes.Equal(clipboardNow, data) {
-		return
-	}
-	log.Printf("#-> %s\n", viewData(data))
+	// log.Println("===接收前比较：", string(clipboardNow), "?=", string(data))
+	// if len(data) == 0 || bytes.Equal(clipboardNow, data) {
+	// 	return
+	// }
+	clipboardNow = data
+	log.Printf("[接收] %s\n", viewData(data))
 	if noReceive {
 		return
 	}
@@ -120,7 +129,6 @@ func clipboardPaste(data []byte) {
 		var reader *bytes.Reader = bytes.NewReader(data)
 		err = clipboardImage.Write(reader)
 	}
-	clipboardNow = data
 	if err != nil {
 		log.Println("剪贴板写入失败:", err)
 		return

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"crypto/tls"
 	"crypto/x509"
-	"fmt"
 	"log"
 	"net"
 	"os"
@@ -21,29 +20,30 @@ func dataProcess() {
 		if err != nil {
 			running = false
 			if isServer {
-				fmt.Printf("客户端断开连接: %v\n", err)
+				log.Printf("客户端断开连接: %v\n", err)
 			} else {
-				fmt.Printf("服务端断开连接: %v\n", err)
+				log.Printf("服务端断开连接: %v\n", err)
 				time.Sleep(3 * time.Second)
-				fmt.Println("重试连接到服务端")
+				log.Println("重试连接到服务端")
 				client()
 			}
 			break
 		}
 		if verbose {
-			log.Println("接收到数据: ", string(buf[0]), len(buf[:n]), buf[len(buf)-1])
+			log.Println("接收到数据: ", len(buf[:n]))
 		}
 		if n == 0 {
 			continue
 		}
-		if nbuf == nil {
-			nbuf = buf[:n]
+		nbuf = append(nbuf, buf[:n]...)
+		if len(nbuf) > 1 && nbuf[len(nbuf)-1] == 0 && nbuf[len(nbuf)-2] == 0 {
+			nbuf = nbuf[:len(nbuf)-2]
 			var allLen = len(nbuf)
-			log.Println("接收到全部数据: ", string(nbuf[0]), len(nbuf[:allLen]))
-			clipboardPaste(nbuf[:allLen])
+			if verbose {
+				log.Println("接收到全部数据: ", string(nbuf[0]), len(nbuf[:allLen]))
+			}
+			clipboardPaste(nbuf)
 			nbuf = []byte{}
-		} else {
-			nbuf = append(nbuf, buf[:n]...)
 		}
 	}
 }
