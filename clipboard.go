@@ -21,7 +21,11 @@ const (
 	Image datatype = 'I'
 )
 
-var running bool = false
+var (
+	running   bool        = false
+	skipOne   bool        = false
+	skipTimer *time.Timer = nil
+)
 
 func clipboardMonitoring() {
 	if running {
@@ -102,8 +106,20 @@ func clipboardCopy() bool {
 	if bytes.Equal(clipboardNow, clipboardContent) {
 		return false
 	}
-	log.Printf("[发送] %s\n", viewData(clipboardContent))
+	// log.Println("===发送前比较：", len(clipboardNow), "?=", len(clipboardContent))
 	clipboardNow = clipboardContent
+	if skipOne {
+		skipOne = false
+		if skipTimer != nil {
+			skipTimer.Stop()
+			skipTimer = nil
+		}
+		if verbose {
+			log.Println("跳过一次")
+		}
+		return false
+	}
+	log.Printf("[发送] %s\n", viewData(clipboardContent))
 	if !noSend {
 		serverSend(append(clipboardContent, byte(0), byte(0)))
 	}
@@ -116,6 +132,17 @@ func clipboardPaste(data []byte) {
 	// 	return
 	// }
 	clipboardNow = data
+	if !skipOne {
+		if skipTimer != nil {
+			skipTimer.Stop()
+		}
+		skipOne = true
+		skipTimer = time.AfterFunc(time.Duration(cdTime)*time.Millisecond, func() {
+			skipOne = false
+			skipTimer.Stop()
+			skipTimer = nil
+		})
+	}
 	log.Printf("[接收] %s\n", viewData(data))
 	if noReceive {
 		return

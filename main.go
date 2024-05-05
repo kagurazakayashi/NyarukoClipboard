@@ -25,6 +25,7 @@ var (
 	address      string
 	conn         net.Conn
 	verbose      bool
+	cdTime       int64
 )
 
 const bufSize = 1048576
@@ -38,6 +39,7 @@ func init() {
 	flag.BoolVar(&noSend, "ns", false, "禁止发送")
 	flag.BoolVar(&noReceive, "nr", false, "禁止接收")
 	flag.IntVar(&refresh, "r", 1000, "剪贴板检查间隔（毫秒）")
+	flag.Int64Var(&cdTime, "cd", 2000, "剪贴板读取冷却时间（毫秒）")
 	flag.BoolVar(&verbose, "v", false, "显示调试信息")
 }
 
@@ -45,12 +47,12 @@ func main() {
 	log.Println("NyarukoClipboard v1.0.0")
 	flag.Parse()
 	if len(confClient) > 0 {
-		fmt.Println("客户端模式: " + confClient)
+		log.Println("客户端模式: " + confClient)
 		protocolAndAddress(confClient)
 		client()
 	} else if len(confServer) > 0 {
 		isServer = true
-		fmt.Println("服务器模式: " + confServer)
+		log.Println("服务器模式: " + confServer)
 		protocolAndAddress(confServer)
 		server()
 	} else {
