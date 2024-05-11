@@ -1,8 +1,8 @@
+![icon](ico/icon.ico)
+
 # NyarukoClipboard
 
 剪贴板点对点同步
-
-还没做完，仅能用状态（安全性功能、传输文本以外的功能 还没有）
 
 ## 使用方法
 

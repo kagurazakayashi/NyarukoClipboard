@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=NyarukoClipboard
+GenericName=NyarukoClipboard
+Comment=剪贴板点对点同步工具。
+Exec=./NyarukoClipboard
+Terminal=true
+Icon=./NyarukoClipboard.png
+Type=Application
+Categories=Tool

@@ -1,3 +1,4 @@
+//go:generate goversioninfo -icon=ico/icon.ico -manifest=main.exe.manifest -arm=true
 package main
 
 import (
