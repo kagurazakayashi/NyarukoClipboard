@@ -29,7 +29,7 @@ var (
 	cdTime       int64
 )
 
-const bufSize = 1048576
+const bufSize = 10000003 // 10MB
 
 func init() {
 	flag.StringVar(&confServer, "s", "tcp://:7976", "服务器模式，作为服务器连接的地址")

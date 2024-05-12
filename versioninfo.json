@@ -19,9 +19,9 @@
         "FileSubType": "00"
     },
     "StringFileInfo": {
-        "Comments": "剪贴板点对点同步工具。",
+        "Comments": "使剪贴板中的文本和图片在两台电脑间点对点同步",
         "CompanyName": "Kagurazaka Yashi",
-        "FileDescription": "剪贴板点对点同步工具。",
+        "FileDescription": "使剪贴板中的文本和图片在两台电脑间点对点同步",
         "FileVersion": "1.0.0.0",
         "InternalName": "NyarukoClipboard",
         "LegalCopyright": "2024, Kagurazaka Yashi.",

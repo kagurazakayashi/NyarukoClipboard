@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=NyarukoClipboard
+GenericName=NyarukoClipboard
+Comment=使剪贴板中的文本和图片在两台电脑间点对点同步
+Exec=./NyarukoClipboard
+Terminal=true
+Icon=./NyarukoClipboard.png
+Type=Application
+Categories=Tool
